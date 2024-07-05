@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Bill {
+  amount    Float?
+  createdAt DateTime  @default(now())
+  date      DateTime?
+  id        String    @id @default(cuid())
+  updatedAt DateTime  @updatedAt
+  vendor    Vendor?   @relation(fields: [vendorId], references: [id])
+  vendorId  String?
+}
+
+model DailySummary {
+  createdAt     DateTime  @default(now())
+  date          DateTime?
+  id            String    @id @default(cuid())
+  totalBills    Float?
+  totalPayments Float?
+  updatedAt     DateTime  @updatedAt
+}
+
+model Payment {
+  amount    Float?
+  createdAt DateTime  @default(now())
+  date      DateTime?
+  id        String    @id @default(cuid())
+  updatedAt DateTime  @updatedAt
+  vendor    Vendor?   @relation(fields: [vendorId], references: [id])
+  vendorId  String?
+}
+
+model Vendor {
+  address     String?
+  bills       Bill[]
+  createdAt   DateTime  @default(now())
+  email       String?
+  id          String    @id @default(cuid())
+  name        String?
+  payments    Payment[]
+  phoneNumber String?
+  updatedAt   DateTime  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Role {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  name        String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Admin {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomerUser {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
